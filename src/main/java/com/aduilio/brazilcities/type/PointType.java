@@ -32,7 +32,7 @@ public class PointType implements UserType
     }
 
     @Override
-    public Class returnedClass()
+    public Class<Point> returnedClass()
     {
         return Point.class;
     }
