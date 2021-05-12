@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
 
+import com.aduilio.brazilcities.dto.CityDto;
 import com.aduilio.brazilcities.entity.City;
+import com.aduilio.brazilcities.mapper.CityMapper;
 import com.aduilio.brazilcities.repository.CityRepository;
 
 /**
@@ -31,9 +33,11 @@ public class CityController
      * @return {@link Page} of {@link City}
      */
     @GetMapping
-    public Page<City> list(final Pageable page)
+    public Page<CityDto> list(final Pageable page)
     {
-        return cityRepository.findAll(page);
+        return cityRepository
+                .findAll(page)
+                .map(CityMapper.INSTANCE::mapCityDtoFrom);
     }
 
     /**
@@ -44,9 +48,10 @@ public class CityController
      * @return {@link City}
      */
     @GetMapping ("/{id}")
-    public ResponseEntity<City> read(@PathVariable final Long id)
+    public ResponseEntity<CityDto> read(@PathVariable final Long id)
     {
         return cityRepository.findById(id)
+                .map(CityMapper.INSTANCE::mapCityDtoFrom)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
